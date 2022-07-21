@@ -13,3 +13,9 @@
     display: flex;
     justify-content: space-between;
 }
+.cardAdd{
+    color:#000000 !important;
+}
+.cardAdd:hover{
+    background-color: purple !important;
+}

@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import logo from '../../assets/ecommerce-logo.png';
+import logo from '../../assets/ecommerce-logo.png'
 
 import styles from './Navbar.module.css';
 
@@ -17,23 +17,23 @@ const Navbar = () => {
     <>
       <AppBar position='fixed' className={styles.appBar}>
         <Toolbar>
-          <Typography variant='h6' className={styles.title} color='inherit'>
+          <Typography variant='h6' className={styles.title} >
             <img
               src={logo}
-              alt='Commerce '
+              alt='Commerce'
               height='25px'
               className={styles.image}
             />
-            Commerce
+            Sat na ruci
           </Typography>
           <div className={styles.grow} />
-          <div className={styles.button}>
+          <div>
             <IconButton
               aria-label='Show cart items'
-              color='inherit'
+              className = {styles.cartButton}
             >
                 <Badge badgeContent={2} color='secondary'>
-                    <ShoppingCartIcon/>
+                    <ShoppingCartIcon />
                 </Badge>
             </IconButton>
           </div>
