@@ -18,7 +18,7 @@ type Props = {
 const Product: React.FC<Props> = ({ product }) => {
   return (
     <Card className={styles.root}>
-      <CardMedia className={styles.media} image='' title={product.name} />
+      <CardMedia className={styles.media} image={product.image} title={product.name} />
       <CardContent>
         <div className={styles.cardContent}>
           <Typography variant='h5' gutterBottom>
@@ -28,12 +28,12 @@ const Product: React.FC<Props> = ({ product }) => {
             {product.price}
           </Typography>
         </div>
-        <Typography variant='h2' color='textSecondary'>
+        <Typography variant='body2' color='textSecondary'>
           {product.description}
         </Typography>
       </CardContent>
-      <CardActions disableSpacing className={styles.CardActions}>
-        <IconButton aria-label='Add to Cart'>
+      <CardActions disableSpacing className={styles.cardActions}>
+        <IconButton edge='end' aria-label='Add to Cart'>
           <AddShoppingCartIcon />
         </IconButton>
       </CardActions>

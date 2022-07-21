@@ -1,0 +1,44 @@
+.appBar{
+    box-shadow: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    background-color: #ffffff;
+    color: #000000;
+}
+.title{
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+.image{
+    margin-right: 10px;
+}
+.menuButton{
+    margin-right: 10%;
+}
+.grow{
+    flex-grow: 1;
+}
+.search{
+    position: relative;
+    margin-right: 10%;
+    margin-left: 0;
+    width: 100%;
+}
+.searchIcon{
+    height: 100%;
+    position: absolute;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.inputRoot{
+    color: inherit;
+}
+.inputInput{
+    width: 100%;
+}
+.cartButton{
+    color: #000000;
+}

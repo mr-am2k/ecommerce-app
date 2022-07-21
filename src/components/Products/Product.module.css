@@ -7,7 +7,7 @@
 }
 .cardActions{
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
 }
 .cardContent{
     display: flex;
