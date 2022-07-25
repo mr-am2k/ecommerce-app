@@ -12,7 +12,11 @@ import logo from '../../assets/ecommerce-logo.png'
 
 import styles from './Navbar.module.css';
 
-const Navbar = () => {
+type Props = {
+  children?: React.ReactNode;
+  cartAmount: number
+};
+const Navbar: React.FC<Props> = ({cartAmount}) => {
   return (
     <>
       <AppBar position='fixed' className={styles.appBar}>
@@ -32,7 +36,7 @@ const Navbar = () => {
               aria-label='Show cart items'
               className = {styles.cartButton}
             >
-                <Badge badgeContent={2} color='secondary'>
+                <Badge badgeContent={cartAmount} color='secondary'>
                     <ShoppingCartIcon />
                 </Badge>
             </IconButton>
