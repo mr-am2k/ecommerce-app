@@ -45,6 +45,7 @@ const App = () => {
     ))
     const newItem: CartModel = new CartModel(cartItems, item.cart.subtotal.formatted)
     setCart(newItem)
+    console.log(cart)
   }
 
 
