@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Navbar, Products, Cart } from './components';
+import { Navbar, Products, Cart, Checkout } from './components';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { commerce } from './lib/commerce';
 import ProductModel from './models/product-model';
@@ -37,19 +37,19 @@ const App = () => {
 
   const updateCartQtyHandler = async (productID: string, quantity: number) => {
     const response = await commerce.cart.update(productID, { quantity });
-    if(response.cart.line_items.length===0){
-      navigate('/')
-      setCart(undefined)
-    }else{
+    if (response.cart.line_items.length === 0) {
+      navigate('/');
+      setCart(undefined);
+    } else {
       setCart(response.cart);
     }
   };
 
   const removeFromCartHandler = async (productID: string) => {
     const response = await commerce.cart.remove(productID);
-    if(response.success){
-      navigate('/')
-      setCart(undefined)
+    if (response.success) {
+      navigate('/');
+      setCart(undefined);
     }
   };
 
@@ -66,7 +66,7 @@ const App = () => {
     fetchCart();
   }, []);
   return (
-    <div className='App'>
+    <>
       <Navbar
         cartAmount={!cart?.line_items ? undefined : cart!.line_items.length}
       />
@@ -88,8 +88,15 @@ const App = () => {
             />
           }
         />
+
+        <Route
+          path='/checkout'
+          element={
+            <Checkout/>
+          }
+        />
       </Routes>
-    </div>
+    </>
   );
 };
 

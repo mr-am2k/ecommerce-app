@@ -50,6 +50,8 @@ const Cart: React.FC<Props> = ({ cartData, updateCart, removeFromCart, emptyCart
             Isprazni korpu
           </Button>
           <Button
+            component={Link}
+            to='/checkout'
             className={`${styles.checkoutButton} ${styles.button}`}
             size='large'
             color='primary'
