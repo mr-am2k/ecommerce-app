@@ -14,7 +14,7 @@ import ProductModel from '../../models/product-model';
 type Props = {
   children?: React.ReactNode;
   product: ProductModel;
-  onAddToCart: (productID: string, quantity: number) => Promise<void> 
+  onAddToCart: (productID: string, quantity: number) => Promise<void>;
 };
 const Product: React.FC<Props> = ({ product, onAddToCart }) => {
   return (
@@ -40,7 +40,12 @@ const Product: React.FC<Props> = ({ product, onAddToCart }) => {
         />
       </CardContent>
       <CardActions disableSpacing className={styles.cardActions}>
-        <IconButton className={styles.cardAdd} edge='end' aria-label='Add to Cart' onClick={() => onAddToCart(product.id,1)}>
+        <IconButton
+          className={styles.cardAdd}
+          edge='end'
+          aria-label='Add to Cart'
+          onClick={() => onAddToCart(product.id, 1)}
+        >
           <AddShoppingCartIcon />
         </IconButton>
       </CardActions>

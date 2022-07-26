@@ -1,47 +1,47 @@
-.appBar{
-    box-shadow: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-    background-color: #ffffff !important;
-    color: #000000 !important;
+.appBar {
+  box-shadow: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  background-color: #ffffff !important;
+  color: #000000 !important;
 }
-.title{
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
-    text-decoration: none;
+.title {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
 }
-.title img{
-    border-radius: 25%;
+.title img {
+  border-radius: 25%;
 }
-.image{
-    margin-right: 10px;
+.image {
+  margin-right: 10px;
 }
-.grow{
-    flex-grow: 1;
+.grow {
+  flex-grow: 1;
 }
-.search{
-    position: relative;
-    margin-right: 10%;
-    margin-left: 0;
-    width: 100%;
+.search {
+  position: relative;
+  margin-right: 10%;
+  margin-left: 0;
+  width: 100%;
 }
-.searchIcon{
-    height: 100%;
-    position: absolute;
-    pointer-events: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.searchIcon {
+  height: 100%;
+  position: absolute;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.inputRoot{
-    color: inherit;
+.inputRoot {
+  color: inherit;
 }
-.inputInput{
-    width: 100%;
+.inputInput {
+  width: 100%;
 }
-.cartButton{
-    color: #000000 !important;
+.cartButton {
+  color: #000000 !important;
 }
-.cartButton:hover{
-    background-color: purple !important;
+.cartButton:hover {
+  background-color: purple !important;
 }

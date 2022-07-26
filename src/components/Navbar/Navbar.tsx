@@ -8,20 +8,20 @@ import {
   Typography,
 } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import logo from '../../assets/ecommerce-logo.png'
+import logo from '../../assets/ecommerce-logo.png';
 
 import styles from './Navbar.module.css';
 
 type Props = {
   children?: React.ReactNode;
-  cartAmount: number
+  cartAmount: number;
 };
-const Navbar: React.FC<Props> = ({cartAmount}) => {
+const Navbar: React.FC<Props> = ({ cartAmount }) => {
   return (
     <>
       <AppBar position='fixed' className={styles.appBar}>
         <Toolbar>
-          <Typography variant='h6' className={styles.title} >
+          <Typography variant='h6' className={styles.title}>
             <img
               src={logo}
               alt='Commerce'
@@ -34,11 +34,11 @@ const Navbar: React.FC<Props> = ({cartAmount}) => {
           <div>
             <IconButton
               aria-label='Show cart items'
-              className = {styles.cartButton}
+              className={styles.cartButton}
             >
-                <Badge badgeContent={cartAmount} color='secondary'>
-                    <ShoppingCartIcon />
-                </Badge>
+              <Badge badgeContent={cartAmount} color='secondary'>
+                <ShoppingCartIcon />
+              </Badge>
             </IconButton>
           </div>
         </Toolbar>

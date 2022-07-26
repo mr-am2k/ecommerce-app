@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Navbar, Products } from './components';
+import { Navbar, Products, Cart } from './components';
 import { commerce } from './lib/commerce';
 import ProductModel from './models/product-model';
-import CartModel from './models/cart-model';
 const App = () => {
   const [products, setProducts] = useState<ProductModel[]>([]);
-  const [cart, setCart] = useState<CartModel>()
+  const [cart, setCart] = useState<any>();
 
   const fetchProducts = async () => {
     const response = await commerce.products.list();
@@ -25,29 +24,14 @@ const App = () => {
   };
 
   const fetchCart = async () => {
-      const data =  await commerce.cart.retrieve();
-      const newCart: CartModel = new CartModel(data.line_items, data.subtotal.formatted)
-      setCart(newCart)
-  }
+    const data = await commerce.cart.retrieve();
+    setCart(data);
+  };
 
   const addToCartHandler = async (productID: string, quantity: number) => {
-    const item = await commerce.cart.add(productID, quantity)
-    let cartItems: ProductModel[] = [];
-    item.cart.line_items.forEach((item:any) => (
-      cartItems.push({
-        "id": item.id,
-        "name": item.name,
-        "description": 'Opis', //it's hardcoded because it's needed for ProductModel, but it's not provided by the commercejs in this case
-        "image": item.image.url,
-        "price": item.price.formatted_with_code 
-      }
-      )
-    ))
-    const newItem: CartModel = new CartModel(cartItems, item.cart.subtotal.formatted)
-    setCart(newItem)
-    console.log(cart)
-  }
-
+    const item = await commerce.cart.add(productID, quantity);
+    setCart(item);
+  };
 
   useEffect(() => {
     fetchProducts();
@@ -55,8 +39,13 @@ const App = () => {
   }, []);
   return (
     <div className='App'>
-      <Navbar cartAmount = {cart?.listOfItems.length === undefined ? 0 : cart!.listOfItems.length }/>
-      <Products products={products} onAddToCart={addToCartHandler} />
+      <Navbar
+        cartAmount={
+          cart?.line_items.length === undefined ? 0 : cart!.line_items.length
+        }
+      />
+      {/* <Products products={products} onAddToCart={addToCartHandler} /> */}
+      <Cart cartData={cart} />
     </div>
   );
 };
