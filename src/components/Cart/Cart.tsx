@@ -5,6 +5,7 @@ import {
   Grid,
   getCardActionAreaUtilityClass,
 } from '@mui/material';
+import { Link } from 'react-router-dom';
 import styles from './Cart.module.css';
 import ProductModel from '../../models/product-model';
 import CartItem from './CartItem';
@@ -17,7 +18,7 @@ const Cart: React.FC<Props> = ({ cartData }) => {
   const isEmpty = !cartData;
   const EmptyCart = () => (
     <Typography variant='subtitle1' className={styles.cart}>
-      Nemate proizvoda u korpi.
+      Nemate proizvoda u korpi, <Link to='/'>dodajte proizvode</Link>!
     </Typography>
   );
 

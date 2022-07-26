@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Navbar, Products, Cart } from './components';
+import { Routes, Route } from 'react-router-dom';
 import { commerce } from './lib/commerce';
 import ProductModel from './models/product-model';
 const App = () => {
@@ -44,8 +45,15 @@ const App = () => {
           cart?.line_items.length === undefined ? 0 : cart!.line_items.length
         }
       />
-      {/* <Products products={products} onAddToCart={addToCartHandler} /> */}
-      <Cart cartData={cart} />
+      <Routes>
+        <Route
+          path='/'
+          element={
+            <Products products={products} onAddToCart={addToCartHandler} />
+          }
+        />
+        <Route path='/cart' element={<Cart cartData={cart} />} />
+      </Routes>
     </div>
   );
 };

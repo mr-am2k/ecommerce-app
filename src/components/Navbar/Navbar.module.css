@@ -8,7 +8,8 @@
   flex-grow: 1;
   display: flex;
   align-items: center;
-  text-decoration: none;
+  text-decoration: none !important;
+  color:  #000 !important;
 }
 .title img {
   border-radius: 25%;
