@@ -13,8 +13,11 @@ import CartItem from './CartItem';
 type Props = {
   children?: React.ReactNode;
   cartData: any | undefined;
+  updateCart: (productID: string, quantity: number) => Promise<void>;
+  removeFromCart: (productID: string) => Promise<void>;
+  emptyCart: () => Promise<void>;
 };
-const Cart: React.FC<Props> = ({ cartData }) => {
+const Cart: React.FC<Props> = ({ cartData, updateCart, removeFromCart, emptyCart }) => {
   const isEmpty = !cartData;
   const EmptyCart = () => (
     <Typography variant='subtitle1' className={styles.cart}>
@@ -27,7 +30,7 @@ const Cart: React.FC<Props> = ({ cartData }) => {
       <Grid className={styles.cart} container spacing={3}>
         {cartData!.line_items.map((item: ProductModel) => (
           <Grid item xs={12} sm={4} key={item.id}>
-            <CartItem cartItem={item} />
+            <CartItem cartItem={item} updateCart={updateCart} removeFromCart={removeFromCart} />
           </Grid>
         ))}
       </Grid>
@@ -37,6 +40,7 @@ const Cart: React.FC<Props> = ({ cartData }) => {
         </Typography>
         <div className={styles.buttons}>
           <Button
+            onClick={emptyCart}
             className={`${styles.emptyButton} ${styles.button}`}
             size='large'
             color='secondary'

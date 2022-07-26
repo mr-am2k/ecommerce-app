@@ -11,9 +11,15 @@ import styles from './CartItem.module.css';
 type Props = {
   children?: React.ReactNode;
   cartItem: any | undefined;
+  updateCart: (productID: string, quantity: number) => Promise<void>;
+  removeFromCart: (productID: string) => Promise<void>;
 };
 
-const CartItem: React.FC<Props> = ({ cartItem }) => {
+const CartItem: React.FC<Props> = ({
+  cartItem,
+  updateCart,
+  removeFromCart,
+}) => {
   return (
     <Card>
       <CardMedia className={styles.media} image={cartItem.image.url} />
@@ -25,15 +31,23 @@ const CartItem: React.FC<Props> = ({ cartItem }) => {
       </CardContent>
       <CardActions className={styles.cardActions}>
         <div className={styles.buttons}>
-          <Button type='button' size='small'>
+          <Button
+            onClick={() => updateCart(cartItem.id, cartItem.quantity - 1)}
+            type='button'
+            size='small'
+          >
             -
           </Button>
           <Typography>{cartItem.quantity}</Typography>
-          <Button type='button' size='small'>
+          <Button
+            onClick={() => updateCart(cartItem.id, cartItem.quantity + 1)}
+            type='button'
+            size='small'
+          >
             +
           </Button>
         </div>
-        <Button variant='contained' type='button' color='secondary'>
+        <Button onClick={() => removeFromCart(cartItem.id)} variant='contained' type='button' color='secondary'>
           Ukloni
         </Button>
       </CardActions>

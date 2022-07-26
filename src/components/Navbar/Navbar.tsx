@@ -15,7 +15,7 @@ import styles from './Navbar.module.css';
 
 type Props = {
   children?: React.ReactNode;
-  cartAmount: number;
+  cartAmount: number | undefined;
 };
 const Navbar: React.FC<Props> = ({ cartAmount }) => {
   let location = useLocation();
