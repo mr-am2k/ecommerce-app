@@ -6,8 +6,11 @@
   width: 100%;
   flex-wrap: nowrap;
 }
+.formTitle {
+  margin-left: 1rem !important;
+}
 .formContent {
-    width:fit-content !important;
+  width: fit-content !important;
   margin: 1rem 1rem 0 !important;
   justify-content: space-between;
   display: flex;
@@ -16,6 +19,11 @@
   width: 45% !important;
   margin-bottom: 1rem !important;
 }
-.address{
-    padding: 0 !important;
+.address {
+  padding: 0 !important;
+}
+@media screen and (max-width: 750px) {
+  .textField {
+    width: 100% !important;
+  }
 }

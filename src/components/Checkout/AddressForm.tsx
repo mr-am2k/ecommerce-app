@@ -34,23 +34,33 @@ const AddressForm: React.FC<Props> = ({ checkoutToken }) => {
 
   const [shippingCountries, setShippingCountries] = useState([]);
   const [shippingCountry, setShippingCountry] = useState('');
-  const [shippingSubdivisions, setShippingSubdivsions] = useState([]);
-  const [shippingSubdivision, setShippingSubdivsion] = useState();
+  const [shippingSubdivisions, setShippingSubdivisions] = useState([]);
+  const [shippingSubdivision, setShippingSubdivision] = useState('');
   const [shippingOptions, setShippingOptions] = useState([]);
-  const [shippingOption, setShippingOption] = useState();
+  const [shippingOption, setShippingOption] = useState('');
 
   const countries = Object.entries(shippingCountries).map(([code, name]) => ({
     id: code,
     label: name,
   }));
-  console.log(countries);
-
+  const subdivisions = Object.entries(shippingSubdivisions).map(
+    ([code, name]) => ({
+      id: code,
+      label: name,
+    })
+  );
   const fetchShippingCountries = async (checkoutTokenID: string) => {
     const response = await commerce.services.localeListShippingCountries(
       checkoutTokenID
     );
     setShippingCountries(response.countries);
     setShippingCountry(Object.keys(response.countries)[0]);
+  };
+
+  const fetchSubdivisions = async (countryCode: string) => {
+    const response = await commerce.services.localeListSubdivisions(countryCode);
+    setShippingSubdivisions(response.subdivisions);
+    setShippingSubdivision(Object.keys(response.subdivisions)[0]);
   };
 
   const submitHandler = () => {
@@ -64,11 +74,21 @@ const AddressForm: React.FC<Props> = ({ checkoutToken }) => {
 
   useEffect(() => {
     fetchShippingCountries(checkoutToken.id);
-  }, [checkoutToken]);
+  }, []);
 
+  useEffect(() => {
+    if (shippingCountry) {
+      countries.forEach((country:any) => {
+          if(shippingCountry===country.label){
+            fetchSubdivisions(country.id);
+            return
+          }
+      })
+    }
+  }, [shippingCountry]);
   return (
     <>
-      <Typography gutterBottom variant='h6'>
+      <Typography className={styles.formTitle} gutterBottom variant='h6'>
         Podaci za dostavu
       </Typography>
       <FormProvider {...methods}>
@@ -136,15 +156,21 @@ const AddressForm: React.FC<Props> = ({ checkoutToken }) => {
                 ))}
               </Select>
             </Grid>
-            {/* <Grid item xs={12} sm={6}>
+            <Grid className={styles.address} item xs={12} sm={6}>
               <InputLabel>Regija</InputLabel>
-              <Select value={} fullWidth onChange={}>
-                <MenuItem key={} value={}>
-                  Select Me
-                </MenuItem>
+              <Select
+                value={shippingSubdivision}
+                fullWidth
+                onChange={(event) => setShippingSubdivision(event.target.value)}
+              >
+                {subdivisions.map((subdivision: any) => (
+                  <MenuItem key={subdivision.id} value={subdivision.label}>
+                    {subdivision.label}
+                  </MenuItem>
+                ))}
               </Select>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            {/* <Grid item xs={12} sm={6}>
               <InputLabel>Opcije</InputLabel>
               <Select value={} fullWidth onChange={}>
                 <MenuItem key={} value={}>
