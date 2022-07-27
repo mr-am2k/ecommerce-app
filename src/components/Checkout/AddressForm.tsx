@@ -43,24 +43,48 @@ const AddressForm: React.FC<Props> = ({ checkoutToken }) => {
     id: code,
     label: name,
   }));
+
   const subdivisions = Object.entries(shippingSubdivisions).map(
     ([code, name]) => ({
       id: code,
       label: name,
     })
   );
+
+  const options = shippingOptions.map((shippingOption: any) => ({
+    id: shippingOption.id,
+    value: shippingOption.description,
+    label: `${shippingOption.description} - ${shippingOption.price.formatted_with_code}`
+  }));
+
   const fetchShippingCountries = async (checkoutTokenID: string) => {
     const response = await commerce.services.localeListShippingCountries(
       checkoutTokenID
     );
     setShippingCountries(response.countries);
-    setShippingCountry(Object.keys(response.countries)[0]);
+    setShippingCountry(Object.values(response.countries)[0] as string);
   };
 
   const fetchSubdivisions = async (countryCode: string) => {
-    const response = await commerce.services.localeListSubdivisions(countryCode);
+    const response = await commerce.services.localeListSubdivisions(
+      countryCode
+    );
     setShippingSubdivisions(response.subdivisions);
-    setShippingSubdivision(Object.keys(response.subdivisions)[0]);
+    setShippingSubdivision(Object.values(response.subdivisions)[0] as string);
+  };
+
+  const fetchShippingOptions = async (
+    checkoutTokenID: string,
+    country: string,
+    region: string | null = null
+  ) => {
+    const response = await commerce.checkout.getShippingOptions(
+      checkoutTokenID,
+      { country, region }
+    );
+    console.log(response)
+    setShippingOptions(response);
+    setShippingOption(response[0].description);
   };
 
   const submitHandler = () => {
@@ -78,14 +102,32 @@ const AddressForm: React.FC<Props> = ({ checkoutToken }) => {
 
   useEffect(() => {
     if (shippingCountry) {
-      countries.forEach((country:any) => {
-          if(shippingCountry===country.label){
-            fetchSubdivisions(country.id);
-            return
-          }
-      })
+      countries.forEach((country: any) => {
+        if (shippingCountry === country.label) {
+          fetchSubdivisions(country.id);
+        }
+      });
     }
+    console.log(shippingCountry)
   }, [shippingCountry]);
+
+  useEffect(() => {
+    if (shippingSubdivision) {
+      countries.forEach((country:any) =>{
+        if(country.label === shippingCountry){
+          subdivisions.forEach((subdivision:any)=>{
+            if(subdivision.label === shippingSubdivision ){
+              fetchShippingOptions(
+               checkoutToken.id,
+               country.id,
+               subdivision.id
+              )
+            }
+          })
+        }
+      }) 
+    }
+  }, [shippingSubdivision]);
   return (
     <>
       <Typography className={styles.formTitle} gutterBottom variant='h6'>
@@ -170,14 +212,20 @@ const AddressForm: React.FC<Props> = ({ checkoutToken }) => {
                 ))}
               </Select>
             </Grid>
-            {/* <Grid item xs={12} sm={6}>
+            <Grid className={styles.address} item xs={12} sm={6}>
               <InputLabel>Opcije</InputLabel>
-              <Select value={} fullWidth onChange={}>
-                <MenuItem key={} value={}>
-                  Select Me
-                </MenuItem>
+              <Select
+                value={shippingOption}
+                fullWidth
+                onChange={(event) => setShippingOption(event.target.value)}
+              >
+                {options.map((option: any) => (
+                  <MenuItem key={option.id} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
               </Select>
-            </Grid> */}
+            </Grid>
           </Grid>
         </form>
       </FormProvider>
