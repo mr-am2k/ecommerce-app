@@ -1,0 +1,21 @@
+.form {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  flex-wrap: nowrap;
+}
+.formContent {
+    width:fit-content !important;
+  margin: 1rem 1rem 0 !important;
+  justify-content: space-between;
+  display: flex;
+}
+.textField {
+  width: 45% !important;
+  margin-bottom: 1rem !important;
+}
+.address{
+    padding: 0 !important;
+}
