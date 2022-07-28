@@ -10,7 +10,7 @@ const Review: React.FC<Props> = ({ checkoutToken }) => {
         Naruceni proizvodi
       </Typography>
       <List disablePadding>
-        {checkoutToken.live.line_items.map((product: any) => (
+        {checkoutToken.line_items.map((product: any) => (
           <ListItem style={{ padding: '10px 0' }} key={product.name}>
             <ListItemText
               primary={product.name}
@@ -24,7 +24,7 @@ const Review: React.FC<Props> = ({ checkoutToken }) => {
         <ListItem style={{ padding: '10px 0' }}>
           <ListItemText primary='Ukupno' />
           <Typography variant='h6'>
-            {checkoutToken.live.subtotal.formatted_with_code}
+            {checkoutToken.subtotal.formatted_with_code}
           </Typography>
         </ListItem>
       </List>

@@ -13,12 +13,100 @@ type Props = {
   children?: React.ReactNode;
   shippingData: ShippingData | undefined;
   checkoutToken: any;
+  nextStep: () => void;
+  previousStep: () => void;
+  onPayment: (checkoutTokenID: string, newOrder: any) => Promise<void>;
 };
-const PaymentForm: React.FC<Props> = ({ shippingData, checkoutToken }) => {
+
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY!);
+
+const PaymentForm: React.FC<Props> = ({
+  shippingData,
+  checkoutToken,
+  nextStep,
+  previousStep,
+  onPayment,
+}) => {
+  const submitHandler = async (
+    event: React.FormEvent<HTMLFormElement>,
+    elements: any,
+    stripe: any
+  ) => {
+    event.preventDefault();
+    if (!stripe || !elements) return;
+    const cardElement = elements.getElement(CardElement);
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: 'card',
+      card: cardElement,
+    });
+    if (error) {
+      console.log(error);
+    } else {
+      const orderData = {
+        list_items: checkoutToken.line_items,
+        customer: {
+          firstname: shippingData?.firstName,
+          lastname: shippingData?.lastName,
+          email: shippingData?.email,
+        },
+        shipping: {
+          name: 'Primary',
+          street: shippingData?.address,
+          town_city: shippingData?.city,
+          county_state: shippingData?.shippingSubdivision,
+          postal_zip_code: shippingData?.postalCode,
+          country: shippingData?.shippingCountry,
+        },
+        fullfillment: {
+          shipping_method: shippingData?.shippingOption,
+        },
+        payment: {
+          gateway: 'stripe',
+          stripe: {
+            payment_method_id: paymentMethod.id,
+          },
+        },
+      };
+      onPayment(checkoutToken.id, orderData);
+      nextStep()
+    }
+  };
   console.log(checkoutToken)
   return (
     <>
       <Review checkoutToken={checkoutToken} />
+      <Divider />
+      <Typography variant='h6' gutterBottom className={styles.title}>
+        Nacin placanja
+      </Typography>
+      <Elements stripe={stripePromise}>
+        <ElementsConsumer>
+          {({ elements, stripe }) => (
+            <form
+              onSubmit={(e: React.FormEvent<HTMLFormElement>) =>
+                submitHandler(e, elements, stripe)
+              }
+            >
+              <CardElement />
+              <br />
+              <br />
+              <div className={styles.buttons}>
+                <Button onClick={previousStep} variant='outlined'>
+                  Nazad
+                </Button>
+                <Button
+                  type='submit'
+                  variant='contained'
+                  disabled={!stripe}
+                  color='primary'
+                >
+                  Plati {checkoutToken.subtotal.formatted_with_code }
+                </Button>
+              </div>
+            </form>
+          )}
+        </ElementsConsumer>
+      </Elements>
     </>
   );
 };

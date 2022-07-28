@@ -26,11 +26,7 @@
 .divider {
   margin: 2px 0;
 }
-.spinner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
 @media screen and (max-width:1150px) {
   .layout {
     width: 60% !important;

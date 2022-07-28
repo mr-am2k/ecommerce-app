@@ -20,6 +20,7 @@ const CartItem: React.FC<Props> = ({
   updateCart,
   removeFromCart,
 }) => {
+  console.log(cartItem)
   return (
     <Card>
       <CardMedia className={styles.media} image={cartItem.image.url} />

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import AddressForm from './AddressForm';
 import PaymentForm from './PaymentForm';
 import {
@@ -7,25 +8,23 @@ import {
   Step,
   StepLabel,
   Typography,
-  CircularProgress,
   Divider,
   Button,
 } from '@mui/material';
+
 import { commerce } from '../../lib/commerce';
 import ShippingData from '../../models/shipping-data';
 import styles from './Checkout.module.css';
 
 const steps = ['Shipping address', 'Payment details'];
 
-const Confirmation = () => <div>Confirmation</div>;
-
 type Props = {
   children?: React.ReactNode;
   cart: any;
+  onPayment: (checkoutTokenID: string, newOrder: any) => Promise<void>;
 };
 
-
-const Checkout: React.FC<Props> = ({ cart }) => {
+const Checkout: React.FC<Props> = ({ cart, onPayment }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [checkoutToken, setCheckoutToken] = useState('');
   const [shippingData, setShippingData] = useState<ShippingData>();
@@ -37,7 +36,9 @@ const Checkout: React.FC<Props> = ({ cart }) => {
           type: 'cart',
         });
         setCheckoutToken(token);
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     };
     generateToken();
   }, [cart]);
@@ -51,14 +52,31 @@ const Checkout: React.FC<Props> = ({ cart }) => {
 
   const next = (data: ShippingData) => {
     setShippingData(data);
-    nextStep()
+    nextStep();
   };
-  console.log(shippingData)
+
+  const Confirmation = () => (
+    <div>
+      <Typography variant='h5'>Hvala na narudzbi</Typography>
+      <Divider className={styles.divider} />
+      <br />
+      <Button type='button' variant='outlined' component={Link} to='/'>
+        Nazad na pocetnu stranicu
+      </Button>
+    </div>
+  );
+
   const Form = () =>
     activeStep === 0 ? (
       <AddressForm next={next} checkoutToken={checkoutToken} />
     ) : (
-      <PaymentForm shippingData={shippingData} checkoutToken={checkoutToken}/>
+      <PaymentForm
+        shippingData={shippingData}
+        checkoutToken={checkoutToken}
+        previousStep={previousStep}
+        onPayment={onPayment}
+        nextStep={nextStep}
+      />
     );
   return (
     <>

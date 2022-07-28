@@ -6,6 +6,7 @@ import ProductModel from './models/product-model';
 const App = () => {
   const [products, setProducts] = useState<ProductModel[]>([]);
   const [cart, setCart] = useState<any>();
+  const [order, setOrder] = useState<any>({});
   const navigate = useNavigate();
 
   const fetchProducts = async () => {
@@ -32,25 +33,26 @@ const App = () => {
 
   const addToCartHandler = async (productID: string, quantity: number) => {
     const response = await commerce.cart.add(productID, quantity);
-    setCart(response.cart);
+    setCart(response);
   };
 
   const updateCartQtyHandler = async (productID: string, quantity: number) => {
     const response = await commerce.cart.update(productID, { quantity });
-    if (response.cart.line_items.length === 0) {
+    if (response.line_items.length === 0) {
       navigate('/');
       setCart(undefined);
     } else {
-      setCart(response.cart);
+      setCart(response);
     }
   };
 
   const removeFromCartHandler = async (productID: string) => {
     const response = await commerce.cart.remove(productID);
-    if (response.success) {
+    if (response.line_items.length===0) {
       navigate('/');
-      setCart(undefined);
+      setCart(undefined)
     }
+    else{setCart(response);}
   };
 
   const emptyCartHandler = async () => {
@@ -61,6 +63,17 @@ const App = () => {
     }
   };
 
+  const paymentHandler = async (checkoutTokenID: string, newOrder: any) => {
+    try {
+      const incomingOrder = await commerce.checkout.capture(
+        checkoutTokenID,
+        newOrder
+      );
+      setOrder(incomingOrder);
+    } catch (error) {
+      setCart(undefined); //cart is set to undefined, because there is no credit card connected to the commercejs and checkout won't happen
+    }
+  };
   useEffect(() => {
     fetchProducts();
     fetchCart();
@@ -91,9 +104,7 @@ const App = () => {
 
         <Route
           path='/checkout'
-          element={
-            <Checkout cart={cart}/>
-          }
+          element={<Checkout cart={cart} onPayment={paymentHandler} />}
         />
       </Routes>
     </>
