@@ -1,5 +1,5 @@
 # E-Commerce app for a watch shop
-You can visit it on: 
+You can visit it on: https://ecommerce-app-am2k.vercel.app/
 
 ## Technologies used
 
