@@ -5,6 +5,7 @@
   flex-direction: column;
   width: 100%;
   flex-wrap: nowrap;
+  padding-right: 1rem;
 }
 .formTitle {
   margin-left: 1rem !important;

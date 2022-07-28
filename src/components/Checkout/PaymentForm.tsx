@@ -27,6 +27,8 @@ const PaymentForm: React.FC<Props> = ({
   previousStep,
   onPayment,
 }) => {
+  let shipPrice:number = 5
+  if(shippingData?.shippingOption === 'Balkan') shipPrice = 50
   const submitHandler = async (
     event: React.FormEvent<HTMLFormElement>,
     elements: any,
@@ -73,8 +75,8 @@ const PaymentForm: React.FC<Props> = ({
   };
   console.log(checkoutToken)
   return (
-    <>
-      <Review checkoutToken={checkoutToken} />
+    <div className={styles.payment}>
+      <Review checkoutToken={checkoutToken} shipPrice={shipPrice} shippingOption={shippingData?.shippingOption} />
       <Divider />
       <Typography variant='h6' gutterBottom className={styles.title}>
         Nacin placanja
@@ -100,14 +102,14 @@ const PaymentForm: React.FC<Props> = ({
                   disabled={!stripe}
                   color='primary'
                 >
-                  Plati {checkoutToken.subtotal.formatted_with_code }
+                  Plati {checkoutToken.subtotal.raw + shipPrice + '.00 BAM' }
                 </Button>
               </div>
             </form>
           )}
         </ElementsConsumer>
       </Elements>
-    </>
+    </div>
   );
 };
 

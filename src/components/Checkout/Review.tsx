@@ -2,8 +2,14 @@ import { Typography, List, ListItem, ListItemText } from '@mui/material';
 type Props = {
   children?: React.ReactNode;
   checkoutToken: any;
+  shipPrice: number;
+  shippingOption: string | undefined;
 };
-const Review: React.FC<Props> = ({ checkoutToken }) => {
+const Review: React.FC<Props> = ({
+  checkoutToken,
+  shipPrice,
+  shippingOption,
+}) => {
   return (
     <>
       <Typography variant='h6' gutterBottom>
@@ -22,9 +28,13 @@ const Review: React.FC<Props> = ({ checkoutToken }) => {
           </ListItem>
         ))}
         <ListItem style={{ padding: '10px 0' }}>
+          <ListItemText primary={'Postarina'} secondary={shippingOption} />
+          <Typography variant='body2'>{shipPrice + '.00 BAM'}</Typography>
+        </ListItem>
+        <ListItem style={{ padding: '10px 0' }}>
           <ListItemText primary='Ukupno' />
           <Typography variant='h6'>
-            {checkoutToken.subtotal.formatted_with_code}
+            {checkoutToken.subtotal.raw + shipPrice + '.00 BAM'}
           </Typography>
         </ListItem>
       </List>

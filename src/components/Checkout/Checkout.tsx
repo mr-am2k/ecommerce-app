@@ -16,7 +16,7 @@ import { commerce } from '../../lib/commerce';
 import ShippingData from '../../models/shipping-data';
 import styles from './Checkout.module.css';
 
-const steps = ['Shipping address', 'Payment details'];
+const steps = ['Adresa primaoca', 'Detalji uplate'];
 
 type Props = {
   children?: React.ReactNode;
@@ -84,7 +84,7 @@ const Checkout: React.FC<Props> = ({ cart, onPayment }) => {
       <main className={styles.layout}>
         <Paper className={styles.paper}>
           <Typography variant='h4' align='center'>
-            Checkout
+            Placanje
           </Typography>
           <Stepper activeStep={activeStep} className={styles.stepper}>
             {steps.map((step) => (
