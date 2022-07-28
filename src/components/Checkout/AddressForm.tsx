@@ -10,24 +10,13 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { commerce } from '../../lib/commerce';
+import ShippingData from '../../models/shipping-data';
 import styles from './AddressForm.module.css';
 
 type Props = {
   children?: React.ReactNode;
   next: (data: ShippingData) => void;
   checkoutToken: any;
-};
-
-type ShippingData = {
-  firstName: string;
-  lastName: string;
-  address: string;
-  email: string;
-  city: string;
-  postalCode: string;
-  shippingCountry: string;
-  shippingSubdivision: string;
-  shippingOption: string;
 };
 
 const AddressForm: React.FC<Props> = ({ checkoutToken, next }) => {
@@ -37,12 +26,6 @@ const AddressForm: React.FC<Props> = ({ checkoutToken, next }) => {
   const emailRef = useRef<HTMLInputElement>(null);
   const cityRef = useRef<HTMLInputElement>(null);
   const postalCodeRef = useRef<HTMLInputElement>(null);
-  // const [firstName, setFirstName] = useState('');
-  // const [lastName, setLastName] = useState('');
-  // const [address, setAddress] = useState('');
-  // const [email, setEmail] = useState('');
-  // const [city, setCity] = useState('');
-  // const [postalCode, setPostalCode] = useState('');
 
   const [shippingCountries, setShippingCountries] = useState([]);
   const [shippingCountry, setShippingCountry] = useState('');
@@ -101,18 +84,19 @@ const AddressForm: React.FC<Props> = ({ checkoutToken, next }) => {
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const shippingData: ShippingData = {
-      firstName: firstNameRef.current!.value,
-      lastName: lastNameRef.current!.value,
-      address: addressRef.current!.value,
-      email: emailRef.current!.value,
-      city: cityRef.current!.value,
-      postalCode: postalCodeRef.current!.value,
-      shippingCountry: shippingCountry,
-      shippingSubdivision: shippingSubdivision,
-      shippingOption: shippingOption,
-    };
+    const shippingData: ShippingData = new ShippingData(
+      firstNameRef.current!.value,
+      lastNameRef.current!.value,
+      addressRef.current!.value,
+      emailRef.current!.value,
+      cityRef.current!.value,
+      postalCodeRef.current!.value,
+      shippingCountry,
+      shippingSubdivision,
+      shippingOption
+    );
 
+    console.log(shippingData)
     next(shippingData);
   };
 

@@ -12,6 +12,7 @@ import {
   Button,
 } from '@mui/material';
 import { commerce } from '../../lib/commerce';
+import ShippingData from '../../models/shipping-data';
 import styles from './Checkout.module.css';
 
 const steps = ['Shipping address', 'Payment details'];
@@ -23,17 +24,6 @@ type Props = {
   cart: any;
 };
 
-type ShippingData = {
-  firstName: string;
-  lastName: string;
-  address: string;
-  email: string;
-  city: string;
-  postalCode: string;
-  shippingCountry: string;
-  shippingSubdivision: string;
-  shippingOption: string;
-};
 
 const Checkout: React.FC<Props> = ({ cart }) => {
   const [activeStep, setActiveStep] = useState(0);
@@ -63,11 +53,12 @@ const Checkout: React.FC<Props> = ({ cart }) => {
     setShippingData(data);
     nextStep()
   };
+  console.log(shippingData)
   const Form = () =>
     activeStep === 0 ? (
       <AddressForm next={next} checkoutToken={checkoutToken} />
     ) : (
-      <PaymentForm />
+      <PaymentForm shippingData={shippingData} checkoutToken={checkoutToken}/>
     );
   return (
     <>
