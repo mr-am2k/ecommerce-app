@@ -48,19 +48,17 @@ const App = () => {
 
   const removeFromCartHandler = async (productID: string) => {
     const response = await commerce.cart.remove(productID);
-    if (response.line_items.length===0) {
-      navigate('/');
-      setCart(undefined)
-    }
-    else{setCart(response);}
-  };
-
-  const emptyCartHandler = async () => {
-    const response = await commerce.cart.empty();
-    if (response.success) {
+    if (response.line_items.length === 0) {
       navigate('/');
       setCart(undefined);
+    } else {
+      setCart(response);
     }
+  };
+
+  const emptyCartHandler = () => {
+    navigate('/');
+    setCart(undefined);
   };
 
   const paymentHandler = async (checkoutTokenID: string, newOrder: any) => {

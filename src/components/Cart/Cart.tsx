@@ -15,7 +15,7 @@ type Props = {
   cartData: any | undefined;
   updateCart: (productID: string, quantity: number) => Promise<void>;
   removeFromCart: (productID: string) => Promise<void>;
-  emptyCart: () => Promise<void>;
+  emptyCart: () => void;
 };
 const Cart: React.FC<Props> = ({ cartData, updateCart, removeFromCart, emptyCart }) => {
   const isEmpty = !cartData;
