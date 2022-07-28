@@ -8,29 +8,41 @@ import {
   Typography,
   TextField,
 } from '@mui/material';
-import { useForm, FormProvider } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 import { commerce } from '../../lib/commerce';
 import styles from './AddressForm.module.css';
 
 type Props = {
   children?: React.ReactNode;
+  next: (data: ShippingData) => void;
   checkoutToken: any;
 };
 
-const AddressForm: React.FC<Props> = ({ checkoutToken }) => {
-  const methods = useForm();
+type ShippingData = {
+  firstName: string;
+  lastName: string;
+  address: string;
+  email: string;
+  city: string;
+  postalCode: string;
+  shippingCountry: string;
+  shippingSubdivision: string;
+  shippingOption: string;
+};
+
+const AddressForm: React.FC<Props> = ({ checkoutToken, next }) => {
   const firstNameRef = useRef<HTMLInputElement>(null);
   const lastNameRef = useRef<HTMLInputElement>(null);
   const addressRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const cityRef = useRef<HTMLInputElement>(null);
   const postalCodeRef = useRef<HTMLInputElement>(null);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [address, setAddress] = useState('');
-  const [email, setEmail] = useState('');
-  const [city, setCity] = useState('');
-  const [postalCode, setPostalCode] = useState('');
+  // const [firstName, setFirstName] = useState('');
+  // const [lastName, setLastName] = useState('');
+  // const [address, setAddress] = useState('');
+  // const [email, setEmail] = useState('');
+  // const [city, setCity] = useState('');
+  // const [postalCode, setPostalCode] = useState('');
 
   const [shippingCountries, setShippingCountries] = useState([]);
   const [shippingCountry, setShippingCountry] = useState('');
@@ -54,7 +66,7 @@ const AddressForm: React.FC<Props> = ({ checkoutToken }) => {
   const options = shippingOptions.map((shippingOption: any) => ({
     id: shippingOption.id,
     value: shippingOption.description,
-    label: `${shippingOption.description} - ${shippingOption.price.formatted_with_code}`
+    label: `${shippingOption.description} - ${shippingOption.price.formatted_with_code}`,
   }));
 
   const fetchShippingCountries = async (checkoutTokenID: string) => {
@@ -82,18 +94,26 @@ const AddressForm: React.FC<Props> = ({ checkoutToken }) => {
       checkoutTokenID,
       { country, region }
     );
-    console.log(response)
     setShippingOptions(response);
     setShippingOption(response[0].description);
   };
 
-  const submitHandler = () => {
-    setFirstName(firstNameRef.current!.value);
-    setLastName(lastNameRef.current!.value);
-    setAddress(addressRef.current!.value);
-    setEmail(emailRef.current!.value);
-    setCity(cityRef.current!.value);
-    setPostalCode(postalCodeRef.current!.value);
+  const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const shippingData: ShippingData = {
+      firstName: firstNameRef.current!.value,
+      lastName: lastNameRef.current!.value,
+      address: addressRef.current!.value,
+      email: emailRef.current!.value,
+      city: cityRef.current!.value,
+      postalCode: postalCodeRef.current!.value,
+      shippingCountry: shippingCountry,
+      shippingSubdivision: shippingSubdivision,
+      shippingOption: shippingOption,
+    };
+
+    next(shippingData);
   };
 
   useEffect(() => {
@@ -108,24 +128,23 @@ const AddressForm: React.FC<Props> = ({ checkoutToken }) => {
         }
       });
     }
-    console.log(shippingCountry)
   }, [shippingCountry]);
 
   useEffect(() => {
     if (shippingSubdivision) {
-      countries.forEach((country:any) =>{
-        if(country.label === shippingCountry){
-          subdivisions.forEach((subdivision:any)=>{
-            if(subdivision.label === shippingSubdivision ){
+      countries.forEach((country: any) => {
+        if (country.label === shippingCountry) {
+          subdivisions.forEach((subdivision: any) => {
+            if (subdivision.label === shippingSubdivision) {
               fetchShippingOptions(
-               checkoutToken.id,
-               country.id,
-               subdivision.id
-              )
+                checkoutToken.id,
+                country.id,
+                subdivision.id
+              );
             }
-          })
+          });
         }
-      }) 
+      });
     }
   }, [shippingSubdivision]);
   return (
@@ -133,102 +152,119 @@ const AddressForm: React.FC<Props> = ({ checkoutToken }) => {
       <Typography className={styles.formTitle} gutterBottom variant='h6'>
         Podaci za dostavu
       </Typography>
-      <FormProvider {...methods}>
-        <form className={styles.form}>
-          <Grid className={styles.formContent} container spacing={3}>
-            <TextField
-              ref={firstNameRef}
-              className={styles.textField}
+      <form onSubmit={submitHandler} className={styles.form}>
+        <Grid className={styles.formContent} container spacing={3}>
+          <input
+            ref={firstNameRef}
+            className={styles.textField}
+            name='firstName'
+            placeholder='Ime*'
+            required
+          />
+          <input
+            ref={lastNameRef}
+            className={styles.textField}
+            name='lastName'
+            placeholder='Prezime*'
+            required
+          />
+          <input
+            ref={addressRef}
+            className={styles.textField}
+            name='address1'
+            placeholder='Adresa*'
+            required
+          />
+          <input
+            ref={emailRef}
+            className={styles.textField}
+            name='email'
+            placeholder='E-mail*'
+            required
+          />
+          <input
+            ref={cityRef}
+            className={styles.textField}
+            name='city'
+            placeholder='Grad*'
+            required
+          />
+          <input
+            ref={postalCodeRef}
+            className={styles.textField}
+            name='postalCode'
+            placeholder='Postanski broj*'
+            required
+          />
+
+          <Grid className={styles.address} item xs={12} sm={6}>
+            <InputLabel>Drzava</InputLabel>
+            <Select
+              className={styles.addressSelect}
+              value={shippingCountry}
               fullWidth
-              name='firstName'
-              label='Ime'
-              required
-            />
-            <TextField
-              ref={lastNameRef}
-              className={styles.textField}
-              fullWidth
-              name='lastName'
-              label='Prezime'
-              required
-            />
-            <TextField
-              ref={addressRef}
-              className={styles.textField}
-              fullWidth
-              name='address1'
-              label='Adresa'
-              required
-            />
-            <TextField
-              ref={emailRef}
-              className={styles.textField}
-              fullWidth
-              name='email'
-              label='E-mail'
-              required
-            />
-            <TextField
-              ref={cityRef}
-              className={styles.textField}
-              fullWidth
-              name='city'
-              label='Grad'
-              required
-            />
-            <TextField
-              ref={postalCodeRef}
-              className={styles.textField}
-              fullWidth
-              name='postalCode'
-              label='Postanski broj'
-              required
-            />
-            <Grid className={styles.address} item xs={12} sm={6}>
-              <InputLabel>Drzava</InputLabel>
-              <Select
-                value={shippingCountry}
-                fullWidth
-                onChange={(event) => setShippingCountry(event.target.value)}
-              >
-                {countries.map((country: any) => (
-                  <MenuItem key={country.id} value={country.label}>
-                    {country.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Grid>
-            <Grid className={styles.address} item xs={12} sm={6}>
-              <InputLabel>Regija</InputLabel>
-              <Select
-                value={shippingSubdivision}
-                fullWidth
-                onChange={(event) => setShippingSubdivision(event.target.value)}
-              >
-                {subdivisions.map((subdivision: any) => (
-                  <MenuItem key={subdivision.id} value={subdivision.label}>
-                    {subdivision.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Grid>
-            <Grid className={styles.address} item xs={12} sm={6}>
-              <InputLabel>Opcije</InputLabel>
-              <Select
-                value={shippingOption}
-                fullWidth
-                onChange={(event) => setShippingOption(event.target.value)}
-              >
-                {options.map((option: any) => (
-                  <MenuItem key={option.id} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Grid>
+              onChange={(event) => setShippingCountry(event.target.value)}
+            >
+              {countries.map((country: any) => (
+                <MenuItem key={country.id} value={country.label}>
+                  {country.label}
+                </MenuItem>
+              ))}
+            </Select>
           </Grid>
-        </form>
-      </FormProvider>
+          <Grid className={styles.address} item xs={12} sm={6}>
+            <InputLabel className={styles.singleAddressSelect}>
+              Regija
+            </InputLabel>
+            <Select
+              className={`${styles.addressSelect} ${styles.singleAddressSelect} `}
+              value={shippingSubdivision}
+              fullWidth
+              onChange={(event) => setShippingSubdivision(event.target.value)}
+            >
+              {subdivisions.map((subdivision: any) => (
+                <MenuItem key={subdivision.id} value={subdivision.label}>
+                  {subdivision.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </Grid>
+          <Grid className={styles.address} item xs={12} sm={6}>
+            <InputLabel>Opcije</InputLabel>
+            <Select
+              className={styles.addressSelect}
+              value={shippingOption}
+              fullWidth
+              onChange={(event) => setShippingOption(event.target.value)}
+            >
+              {options.map((option: any) => (
+                <MenuItem key={option.id} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </Grid>
+        </Grid>
+        <br />
+        <div className={styles.buttons}>
+          <Button
+            className={styles.buttonLeft}
+            component={Link}
+            to='/cart'
+            variant='outlined'
+          >
+            Korpa
+          </Button>
+          <Button
+            type='submit'
+            className={styles.buttonRight}
+            variant='contained'
+            color='primary'
+          >
+            Naprijed
+          </Button>
+        </div>
+      </form>
     </>
   );
 };

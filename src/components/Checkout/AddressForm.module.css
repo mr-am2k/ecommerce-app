@@ -16,14 +16,53 @@
   display: flex;
 }
 .textField {
-  width: 45% !important;
-  margin-bottom: 1rem !important;
+  width: 40% ;
+  margin-bottom: 1rem ;
+  height: 2rem;
+  font-size: 18px;
+  padding: 0.5rem 1rem ;
+  border-radius: 5px;
+  border: 1px solid #C0C0C0;
+}
+.textField:focus{
+  outline: 2px solid #1E90FF;
+  border-radius: 5px;
+  border: none;
 }
 .address {
   padding: 0 !important;
 }
+.addressSelect {
+  width: 90% !important;
+}
+.singleAddressSelect {
+  margin-left: 10% !important;
+}
+.buttons {
+  width: 95%;
+  display: flex;
+  justify-content: space-between;
+}
+/* .buttonLeft{
+  margin-left: 2%;
+}
+.buttonRight{
+  margin-right: 2%;
+} */
 @media screen and (max-width: 750px) {
   .textField {
     width: 100% !important;
+  }
+  .address {
+    width: 100% !important;
+  }
+  .addressSelect {
+    width: 100% !important;
+  }
+  .singleAddressSelect {
+    margin-left: 0 !important;
+  }
+  .buttons{
+    width: 90%;
   }
 }

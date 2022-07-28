@@ -11,7 +11,7 @@ import {
   Divider,
   Button,
 } from '@mui/material';
-import {commerce} from '../../lib/commerce'
+import { commerce } from '../../lib/commerce';
 import styles from './Checkout.module.css';
 
 const steps = ['Shipping address', 'Payment details'];
@@ -21,26 +21,54 @@ const Confirmation = () => <div>Confirmation</div>;
 type Props = {
   children?: React.ReactNode;
   cart: any;
-}
+};
 
-const Checkout: React.FC<Props> = ({cart}) => {
+type ShippingData = {
+  firstName: string;
+  lastName: string;
+  address: string;
+  email: string;
+  city: string;
+  postalCode: string;
+  shippingCountry: string;
+  shippingSubdivision: string;
+  shippingOption: string;
+};
 
+const Checkout: React.FC<Props> = ({ cart }) => {
   const [activeStep, setActiveStep] = useState(0);
-  const [checkoutToken, setCheckoutToken] = useState('')
+  const [checkoutToken, setCheckoutToken] = useState('');
+  const [shippingData, setShippingData] = useState<ShippingData>();
 
   useEffect(() => {
     const generateToken = async () => {
       try {
-        const token = await commerce.checkout.generateToken(cart.id, {type:'cart'})
-        setCheckoutToken(token)
-      } catch (error) {
-        
-      }
-    }
+        const token = await commerce.checkout.generateToken(cart.id, {
+          type: 'cart',
+        });
+        setCheckoutToken(token);
+      } catch (error) {}
+    };
     generateToken();
   }, [cart]);
 
-  const Form = () => (activeStep === 0 ? <AddressForm checkoutToken={checkoutToken}/> : <PaymentForm />);
+  const nextStep = () => {
+    setActiveStep((prevStep) => prevStep + 1);
+  };
+  const previousStep = () => {
+    setActiveStep((prevStep) => prevStep - 1);
+  };
+
+  const next = (data: ShippingData) => {
+    setShippingData(data);
+    nextStep()
+  };
+  const Form = () =>
+    activeStep === 0 ? (
+      <AddressForm next={next} checkoutToken={checkoutToken} />
+    ) : (
+      <PaymentForm />
+    );
   return (
     <>
       <div className={styles.toolbar} />
@@ -56,7 +84,11 @@ const Checkout: React.FC<Props> = ({cart}) => {
               </Step>
             ))}
           </Stepper>
-          {activeStep === steps.length ? <Confirmation /> : checkoutToken && <Form />}
+          {activeStep === steps.length ? (
+            <Confirmation />
+          ) : (
+            checkoutToken && <Form />
+          )}
         </Paper>
       </main>
     </>
