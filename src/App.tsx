@@ -40,7 +40,7 @@ const App = () => {
     const response = await commerce.cart.update(productID, { quantity });
     if (response.line_items.length === 0) {
       navigate('/');
-      setCart(undefined);
+    setCart(undefined);
     } else {
       setCart(response);
     }
@@ -56,9 +56,10 @@ const App = () => {
     }
   };
 
-  const emptyCartHandler = () => {
+  const emptyCartHandler = async () => {
     navigate('/');
-    setCart(undefined);
+    const response = await commerce.cart.empty();
+    setCart(response.cart);
   };
 
   const paymentHandler = async (checkoutTokenID: string, newOrder: any) => {
@@ -69,7 +70,8 @@ const App = () => {
       );
       setOrder(incomingOrder);
     } catch (error) {
-      setCart(undefined); //cart is set to undefined, because there is no credit card connected to the commercejs and checkout won't happen
+      const response = await commerce.cart.empty();
+      setCart(response.cart); //setting cart to empty cart because order is completed and this is in catch block since there is no connected card to commerce.js so it won't work without it 
     }
   };
   useEffect(() => {
@@ -79,7 +81,7 @@ const App = () => {
   return (
     <>
       <Navbar
-        cartAmount={!cart?.line_items ? undefined : cart!.line_items.length}
+        cartAmount={cart?.line_items ? cart!.line_items.length : undefined}
       />
       <Routes>
         <Route
